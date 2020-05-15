@@ -36,7 +36,7 @@ func CreateWG(m linkmgr.Manager, name string, cfg wgtypes.Config, addrs []linkmg
 				continue
 			}
 			if created {
-				if delerr := m.DelLink(link.Index()); delerr != nil {
+				if delerr := m.DelLink(link.Name()); delerr != nil {
 					log.Println("error:", delerr)
 				}
 			}

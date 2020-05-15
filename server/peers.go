@@ -257,7 +257,7 @@ func configurePeerTuns(m linkmgr.Manager, cfg SrvConfig, clientKeys []wirebox.Pe
 		}, addrs)
 		if err != nil {
 			for _, iface := range links {
-				if err := m.DelLink(iface.Index()); err != nil {
+				if err := m.DelLink(iface.Name()); err != nil {
 					logErr(err)
 				} else {
 					log.Println("deleted link", iface.Name())

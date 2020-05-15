@@ -30,7 +30,7 @@ func configureTunnel(m linkmgr.Manager, cfg Config) error {
 	clCfg, err := solictCfg(cfg, configIPv6, pubKey, tunLink)
 	if err != nil {
 		if created {
-			if err := m.DelLink(tunLink.Index()); err != nil {
+			if err := m.DelLink(tunLink.Name()); err != nil {
 				log.Println("error: failed to delete link:", err)
 			}
 		}
@@ -39,7 +39,7 @@ func configureTunnel(m linkmgr.Manager, cfg Config) error {
 
 	if err := setTunnelCfg(m, cfg, configIPv6, clCfg); err != nil {
 		if created {
-			if err := m.DelLink(tunLink.Index()); err != nil {
+			if err := m.DelLink(tunLink.Name()); err != nil {
 				log.Println("error: failed to delete link:", err)
 			}
 		}

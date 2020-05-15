@@ -343,9 +343,14 @@ func (m *rtnMngr) GetLink(name string) (Link, error) {
 	return rtnLink{m, *iface}, nil
 }
 
-func (m *rtnMngr) DelLink(indx int) error {
-	if err := m.rtn.Link.Delete(uint32(indx)); err != nil {
-		return LinkError{strconv.Itoa(indx), err}
+func (m *rtnMngr) DelLink(name string) error {
+	iface, err := net.InterfaceByName(name)
+	if err != nil {
+		return LinkError{name, err}
+	}
+
+	if err := m.rtn.Link.Delete(uint32(iface.Index)); err != nil {
+		return LinkError{name, err}
 	}
 	return nil
 }

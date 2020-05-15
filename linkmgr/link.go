@@ -44,7 +44,7 @@ type Link interface {
 type Manager interface {
 	Links() ([]Link, error)
 	CreateLink(name string) (Link, error)
-	DelLink(indx int) error
+	DelLink(name string) error
 	GetLink(name string) (Link, error)
 
 	Close() error

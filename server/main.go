@@ -159,7 +159,7 @@ func initialize(m linkmgr.Manager, cfgPath string) (*Server, error) {
 		Zone: strconv.Itoa(masterLink.Index()),
 	})
 	if err != nil {
-		if err := m.DelLink(masterLink.Index()); err != nil {
+		if err := m.DelLink(masterLink.Name()); err != nil {
 			log.Println("failed to delete link:", err)
 		}
 		return nil, err
@@ -173,7 +173,7 @@ func initialize(m linkmgr.Manager, cfgPath string) (*Server, error) {
 	if !cfg.PtMP {
 		clientLinks, newLinks, err = configurePeerTuns(m, cfg, clientKeys, clientCfgs)
 		if err != nil {
-			if err := m.DelLink(masterLink.Index()); err != nil {
+			if err := m.DelLink(masterLink.Name()); err != nil {
 				log.Println("failed to delete link:", err)
 			}
 			return nil, err
@@ -193,11 +193,11 @@ func initialize(m linkmgr.Manager, cfgPath string) (*Server, error) {
 				sc.Close()
 			}
 			for _, l := range newLinks {
-				if err := m.DelLink(l.Index()); err != nil {
+				if err := m.DelLink(l.Name()); err != nil {
 					log.Println("failed to delete link:", err)
 				}
 			}
-			if err := m.DelLink(masterLink.Index()); err != nil {
+			if err := m.DelLink(masterLink.Name()); err != nil {
 				log.Println("failed to delete link:", err)
 			}
 			return nil, err
@@ -245,12 +245,12 @@ func (s *Server) GoServe() (stop func()) {
 
 func (s *Server) Close() error {
 	for _, l := range s.NewTunnels {
-		if err := s.m.DelLink(l.Index()); err != nil {
+		if err := s.m.DelLink(l.Name()); err != nil {
 			log.Println("error: failed to delete link:", err)
 		}
 	}
 	if s.DelMasterLink {
-		if err := s.m.DelLink(s.MasterLink.Index()); err != nil {
+		if err := s.m.DelLink(s.MasterLink.Name()); err != nil {
 			log.Println("error: failed to delete link:", err)
 		}
 	}
