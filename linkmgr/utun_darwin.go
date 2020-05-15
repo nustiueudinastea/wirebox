@@ -101,9 +101,9 @@ func (l *linkTUN) SetUp(status bool) error {
 	} else {
 		cmd = exec.Command(ifconfigPath, l.realInterface, "down")
 	}
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to set up link '%s': %w", l.name, err)
+		return fmt.Errorf("failed to set up link '%s': %s", l.name, string(output))
 	}
 	return nil
 }
@@ -142,9 +142,9 @@ func (l *linkTUN) DelAddr(a Address) error {
 		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.String(), a.IP.String(), "-alias")
 	}
 
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to delete address from link '%s': %w", l.name, err)
+		return fmt.Errorf("failed to delete address from link '%s': %s", l.name, string(output))
 	}
 	return nil
 }
@@ -154,14 +154,15 @@ func (l *linkTUN) AddAddr(a Address) error {
 
 	// use ifconfig to add address to interface. If address has 2 or more semi-colons, it is an IPv6 address
 	if strings.Count(a.String(), ":") >= 2 {
-		cmd = exec.Command(ifconfigPath, l.realInterface, "inet6", a.String(), "alias")
+		len, _ := a.Mask.Size()
+		cmd = exec.Command(ifconfigPath, l.realInterface, "inet6", a.IP.String()+"%"+l.realInterface, "prefixlen", strconv.Itoa(len), "alias")
 	} else {
 		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.String(), a.IP.String(), "alias")
 	}
 
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to add address to link '%s': %w", l.name, err)
+		return fmt.Errorf("failed to add address to link '%s': %s", l.name, string(output))
 	}
 	return nil
 }
@@ -261,9 +262,9 @@ func (m *linkMngr) CreateLink(name string) (Link, error) {
 	// execute wireguard-go
 	cmd := exec.Command(m.wgBinaryPath, "utun")
 	cmd.Env = newEnv
-	err = cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return &linkTUN{}, fmt.Errorf("failed to create link using wireguard-go: %w", err)
+		return &linkTUN{}, fmt.Errorf("failed to create link using wireguard-go: \n---- WG output ----\n%s-------------------", string(output))
 	}
 
 	// read interface file and figure out the real interface
