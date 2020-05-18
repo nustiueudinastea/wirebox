@@ -152,13 +152,24 @@ func (l *linkTUN) DelAddr(a Address) error {
 func (l *linkTUN) AddAddr(a Address) error {
 	var cmd *exec.Cmd
 
+	addr := a.IP.String()
+	if a.Scope == ScopeLink {
+		addr = a.IP.String() + "%" + l.realInterface
+	}
+
 	// use ifconfig to add address to interface. If address has 2 or more semi-colons, it is an IPv6 address
 	if strings.Count(a.String(), ":") >= 2 {
 		len, _ := a.Mask.Size()
-		cmd = exec.Command(ifconfigPath, l.realInterface, "inet6", a.IP.String()+"%"+l.realInterface, "prefixlen", strconv.Itoa(len), "alias")
+		cmd = exec.Command(ifconfigPath, l.realInterface, "inet6", addr, "prefixlen", strconv.Itoa(len))
 	} else {
-		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.String(), a.IP.String(), "alias")
+		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.IP.String())
 	}
+
+	if a.Peer != nil && a.Peer.IP != nil {
+		cmd.Args = append(cmd.Args, a.Peer.IP.String())
+	}
+
+	cmd.Args = append(cmd.Args, "alias")
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
