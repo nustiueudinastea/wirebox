@@ -159,14 +159,18 @@ func (l *linkTUN) AddAddr(a Address) error {
 
 	// use ifconfig to add address to interface. If address has 2 or more semi-colons, it is an IPv6 address
 	if strings.Count(a.String(), ":") >= 2 {
+		// IPv6
 		len, _ := a.Mask.Size()
 		cmd = exec.Command(ifconfigPath, l.realInterface, "inet6", addr, "prefixlen", strconv.Itoa(len))
 	} else {
-		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.IP.String())
-	}
+		// IPv4
+		cmd = exec.Command(ifconfigPath, l.realInterface, "inet", a.IPNet.String())
 
-	if a.Peer != nil && a.Peer.IP != nil {
-		cmd.Args = append(cmd.Args, a.Peer.IP.String())
+		if a.Peer != nil && a.Peer.IP != nil {
+			cmd.Args = append(cmd.Args, a.Peer.IP.String())
+		} else {
+			cmd.Args = append(cmd.Args, a.IP.String())
+		}
 	}
 
 	cmd.Args = append(cmd.Args, "alias")
