@@ -16,8 +16,8 @@ import (
 const (
 	ScopeGlobal  AddrScope = 0
 	ScopeLink    AddrScope = 1
-	wgRunPath              = "/var/run/wireguard"
 	wgBinary               = "wireguard-go"
+	wgRunPath              = "/var/run/wireguard"
 	ifconfigPath           = "/sbin/ifconfig"
 	routePath              = "/sbin/route"
 )
@@ -25,6 +25,19 @@ const (
 type LinkError struct {
 	LinkName string
 	E        error
+}
+
+func prepareWGDir() error {
+	_, err := os.Stat(wgRunPath)
+	if os.IsNotExist(err) {
+		err := os.Mkdir(wgRunPath, 0755)
+		if err != nil {
+			return fmt.Errorf("link mngr: %w", err)
+		}
+	} else if err != nil {
+		return fmt.Errorf("link mngr: %w", err)
+	}
+	return nil
 }
 
 //
@@ -232,6 +245,10 @@ type linkMngr struct {
 
 func (m *linkMngr) Links() ([]Link, error) {
 
+	if err := prepareWGDir(); err != nil {
+		return []Link{}, nil
+	}
+
 	// retrieve all files in the wireguard run path
 	f, err := os.Open(wgRunPath)
 	if err != nil {
@@ -265,6 +282,10 @@ func (m *linkMngr) Links() ([]Link, error) {
 }
 
 func (m *linkMngr) CreateLink(name string) (Link, error) {
+	if err := prepareWGDir(); err != nil {
+		return &linkTUN{}, nil
+	}
+
 	_, err := m.GetLink(name)
 	if err == nil {
 		return &linkTUN{}, fmt.Errorf("failed to create link using wireguard-go: link '%s' already exists", name)
@@ -318,6 +339,10 @@ func (m *linkMngr) DelLink(name string) error {
 }
 
 func (m *linkMngr) GetLink(name string) (Link, error) {
+	if err := prepareWGDir(); err != nil {
+		return &linkTUN{}, nil
+	}
+
 	interfaceFile := fmt.Sprintf("%s/%s.name", wgRunPath, name)
 
 	// read interface file and figure out the real interface
@@ -351,16 +376,6 @@ func (m *linkMngr) Close() error {
 
 // NewManager returns a link manager based on the wireguard-go userspace implementation
 func NewManager() (Manager, error) {
-	_, err := os.Stat(wgRunPath)
-	if os.IsNotExist(err) {
-		err := os.Mkdir(wgRunPath, 0755)
-		if err != nil {
-			return nil, fmt.Errorf("link mngr: %w", err)
-		}
-	} else if err != nil {
-		return nil, fmt.Errorf("link mngr: %w", err)
-	}
-
 	wgBinaryPath, err := exec.LookPath(wgBinary)
 	if err != nil {
 		return nil, fmt.Errorf("link mngr: %w", fmt.Errorf("macOS requires the WireGuard userspace implementation (%s) to be installed: %w", wgBinaryPath, err))
