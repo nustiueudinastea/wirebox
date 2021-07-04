@@ -339,9 +339,13 @@ func (m *linkMngr) DelLink(name string) error {
 }
 
 func (m *linkMngr) GetLink(name string) (Link, error) {
+	fmt.Println("----- 0 -----")
+
 	if err := prepareWGDir(); err != nil {
 		return &linkTUN{}, err
 	}
+
+	fmt.Println("----- 1 -----")
 
 	interfaceFile := fmt.Sprintf("%s/%s.name", wgRunPath, name)
 
@@ -360,14 +364,16 @@ func (m *linkMngr) GetLink(name string) (Link, error) {
 		return &linkTUN{}, fmt.Errorf("failed to get link '%s': %w", name, err)
 	}
 
-	return &linkTUN{
+	lnk := &linkTUN{
 		name:              name,
 		realInterface:     realInterface,
 		interfaceNameFile: interfaceFile,
 		interfaceSockFile: fmt.Sprintf("%s/%s.sock", wgRunPath, realInterface),
 		iface:             *iface,
 		mngr:              m,
-	}, nil
+	}
+	fmt.Println(lnk)
+	return lnk, nil
 }
 
 func (m *linkMngr) Close() error {
