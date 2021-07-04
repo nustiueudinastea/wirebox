@@ -361,16 +361,14 @@ func (m *linkMngr) GetLink(name string) (Link, error) {
 		return &linkTUN{}, fmt.Errorf("failed to get link '%s': %w", name, err)
 	}
 
-	lnk := &linkTUN{
+	return &linkTUN{
 		name:              name,
 		realInterface:     realInterface,
 		interfaceNameFile: interfaceFile,
 		interfaceSockFile: fmt.Sprintf("%s/%s.sock", wgRunPath, realInterface),
 		iface:             *iface,
 		mngr:              m,
-	}
-	fmt.Println(lnk)
-	return lnk, nil
+	}, nil
 }
 
 func (m *linkMngr) Close() error {
