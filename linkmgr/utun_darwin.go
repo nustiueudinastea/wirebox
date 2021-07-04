@@ -246,7 +246,7 @@ type linkMngr struct {
 func (m *linkMngr) Links() ([]Link, error) {
 
 	if err := prepareWGDir(); err != nil {
-		return []Link{}, nil
+		return []Link{}, err
 	}
 
 	// retrieve all files in the wireguard run path
@@ -283,7 +283,7 @@ func (m *linkMngr) Links() ([]Link, error) {
 
 func (m *linkMngr) CreateLink(name string) (Link, error) {
 	if err := prepareWGDir(); err != nil {
-		return &linkTUN{}, nil
+		return &linkTUN{}, err
 	}
 
 	_, err := m.GetLink(name)
@@ -339,13 +339,10 @@ func (m *linkMngr) DelLink(name string) error {
 }
 
 func (m *linkMngr) GetLink(name string) (Link, error) {
-	fmt.Println("----- 0 -----")
 
 	if err := prepareWGDir(); err != nil {
 		return &linkTUN{}, err
 	}
-
-	fmt.Println("----- 1 -----")
 
 	interfaceFile := fmt.Sprintf("%s/%s.name", wgRunPath, name)
 
