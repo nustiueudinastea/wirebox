@@ -340,7 +340,7 @@ func (m *linkMngr) DelLink(name string) error {
 
 func (m *linkMngr) GetLink(name string) (Link, error) {
 	if err := prepareWGDir(); err != nil {
-		return &linkTUN{}, nil
+		return &linkTUN{}, err
 	}
 
 	interfaceFile := fmt.Sprintf("%s/%s.name", wgRunPath, name)
