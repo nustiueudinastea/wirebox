@@ -1,4 +1,4 @@
-module github.com/foxcpp/wirebox
+module github.com/nustiueudinastea/wirebox
 
 go 1.21
 
