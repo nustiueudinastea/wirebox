@@ -54,7 +54,7 @@ func serve(stop <-chan struct{}, c *net.UDPConn, scfg SrvConfig, clCfgs map[wgty
 			log.Println("failed to serialize reply", err)
 			continue
 		}
-		debugLog.Println("sending", reply.String(), "to", sender.IP)
+		debugLog.Println("sending", reply, "to", sender.IP)
 
 		if _, err := c.WriteToUDP(replyDgram, sender); err != nil {
 			log.Println(err)

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "wboxproto";
+option go_package = "./wboxproto";
 
 message IPv6 {
     fixed64 high = 1;
