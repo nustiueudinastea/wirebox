@@ -7,8 +7,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/foxcpp/wirebox"
-	wboxproto "github.com/foxcpp/wirebox/proto"
+	"github.com/nustiueudinastea/wirebox"
+	wboxproto "github.com/nustiueudinastea/wirebox/proto"
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
 

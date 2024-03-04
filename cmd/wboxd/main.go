@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	wboxserver "github.com/foxcpp/wirebox/server"
+	wboxserver "github.com/nustiueudinastea/wirebox/server"
 )
 
 func main() {

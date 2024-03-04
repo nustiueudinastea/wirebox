@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/foxcpp/wirebox"
+	"github.com/nustiueudinastea/wirebox"
 )
 
 type SrvConfig struct {

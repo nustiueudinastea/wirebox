@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/foxcpp/wirebox"
+	"github.com/nustiueudinastea/wirebox"
 )
 
 type Config struct {

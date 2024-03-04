@@ -9,8 +9,8 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/foxcpp/wirebox"
-	"github.com/foxcpp/wirebox/linkmgr"
+	"github.com/nustiueudinastea/wirebox"
+	"github.com/nustiueudinastea/wirebox/linkmgr"
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
 

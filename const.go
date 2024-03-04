@@ -3,7 +3,7 @@ package wirebox
 import (
 	"net"
 
-	"github.com/foxcpp/wirebox/linkmgr"
+	"github.com/nustiueudinastea/wirebox/linkmgr"
 )
 
 var SolictIPv6 net.IP = net.ParseIP("fe80:5747:4443:5000::1")

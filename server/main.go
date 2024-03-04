@@ -14,8 +14,8 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	"github.com/foxcpp/wirebox"
-	"github.com/foxcpp/wirebox/linkmgr"
+	"github.com/nustiueudinastea/wirebox"
+	"github.com/nustiueudinastea/wirebox/linkmgr"
 	"golang.org/x/sys/unix"
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )

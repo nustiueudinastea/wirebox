@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/foxcpp/wirebox"
-	"github.com/foxcpp/wirebox/linkmgr"
-	wboxproto "github.com/foxcpp/wirebox/proto"
+	"github.com/nustiueudinastea/wirebox"
+	"github.com/nustiueudinastea/wirebox/linkmgr"
+	wboxproto "github.com/nustiueudinastea/wirebox/proto"
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
 
