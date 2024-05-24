@@ -125,7 +125,7 @@ func asAddrMsg(ifaceIndx int, a Address) *rtnetlink.AddressMessage {
 		PrefixLength: uint8(prefixLen),
 		Scope:        uint8(a.Scope),
 		Index:        uint32(ifaceIndx),
-		Attributes: rtnetlink.AddressAttributes{
+		Attributes: &rtnetlink.AddressAttributes{
 			Address:   iface,
 			Local:     local,
 			Broadcast: brd,
